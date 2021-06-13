@@ -28,13 +28,11 @@ const handleProfileInfo = (req, res, db) => {
     else {
         var name = req.query.name_like;
         var idno = req.query.idno_like;
-        var planeid = req.query.planeid_like;
         var pagination = {};
         pageSize = req.query._limit;
         pageNumber = req.query._page;
         db('person').count('* as count').where('name', 'like', `%${name}%`)
-        .andWhere('idno', 'like', `%${idno}%`)
-        .orWhere('planeid', 'like', `%${planeid}%`)
+        .orWhere('idno', `%${idno}%`)
         .first().then(res => {
             pagination._page = parseInt(pageNumber);
             pagination._limit = parseInt(pageSize);
@@ -43,8 +41,7 @@ const handleProfileInfo = (req, res, db) => {
         });
         db('person').select()
         .where('name', 'like', `%${name}%`)
-        .andWhere('idno', 'like', `%${idno}%`)
-        .orWhere('planeid', 'like', `%${planeid}%`)
+        .orWhere('idno', 'like', `%${idno}%`)
         .paginate({
             perPage: parseInt(pageSize),
             currentPage: parseInt(pageNumber)
